@@ -1,0 +1,1 @@
+!function(){window.App=Ember.Application.create()}(),function(){App.Router.map(function(){}),App.Store=DS.Store.extend({}),App.IndexRoute=Ember.Route.extend({model:function(){return["red","yellow","blue"]}})}();
