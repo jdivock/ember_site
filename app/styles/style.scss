@@ -1,10 +1,37 @@
+$FontAwesomePath: "/bower_components/font-awesome/font" !default;
+
 @import "bootstrap-sass/lib/bootstrap";
+@import "font-awesome/scss/font-awesome";
 
 /* Put your CSS here */
-html, body {
-    margin: 20px;
-}
 
 textarea {
 	width: 90%
 }
+
+footer {
+	padding: 20px;
+
+	a{
+		line-height: 32px;
+		height: 22px;
+		width: 22px;
+		display: inline-block;
+		cursor: default;
+		
+	}
+	a:hover{
+		text-decoration: none;
+	}
+	i{
+		color: #000;
+		cursor: pointer;
+	}
+	i:hover{
+		font-size: 1.5em;
+	}
+}
+
+
+
+
