@@ -1,4 +1,4 @@
-App.ApplicationView = Em.View.extend({
+/*App.ApplicationView = Em.View.extend({
 	templateName: 'application',
 	NavbarView: Em.View.extend({
 		init: function() {
@@ -39,4 +39,4 @@ App.NavbarController = Em.ArrayController.extend({
 
 		this.set('content', [home, bio]);
 	}
-});
+});*/
