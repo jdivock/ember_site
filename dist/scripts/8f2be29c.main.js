@@ -1,0 +1,1 @@
+!function(){window.App=Ember.Application.create()}(),function(){App.Router.map(function(){this.route("blag"),this.route("multipost")})}();
