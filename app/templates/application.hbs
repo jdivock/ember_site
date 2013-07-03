@@ -1,12 +1,11 @@
 
 <div class="navbar">
 	<div class="navbar-inner">
-		<a class="brand" href="#">JDivock.com</a>
+		{{#linkTo "index" class="brand"}}JDivock.com{{/linkTo}}
 		<ul class="nav">
-
-			<li class="active">{{#linkTo 'blag' activeClass="active"}}Home{{/linkTo}}</li>
-			<li class="">{{#linkTo 'blag' activeClass="active"}}Blag{{/linkTo}}</li>
-			<li class="">{{#linkTo 'multipost' activeClass="active"}}MultiPost{{/linkTo}}</li>
+			{{#linkTo "index" tagName="li" href=false}}<a {{bindAttr href="view.href"}}>Home</a>{{/linkTo}}
+			{{#linkTo "blag" tagName="li" href=false}}<a {{bindAttr href="view.href"}}>Blag</a>{{/linkTo}}
+			{{#linkTo "multipost" tagName="li" href=false}}<a {{bindAttr href="view.href"}}>MultiPost</a>{{/linkTo}}
 		</ul>
 	</div>
 </div>
