@@ -45,8 +45,6 @@ app.get('/checkSessions', function(request, response) {
 	sessionCheck.evernote = request.session.evernote_oauth_access_token ? true : false;
 	sessionCheck.mybb = request.session.mybb_oauth_accesss_token ? true : false;
 
-	sessionCheck.tumblr = true;
-
 	response.send(JSON.stringify(sessionCheck));
 });
 
