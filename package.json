@@ -6,7 +6,8 @@
     "oauth": ">=0.9.8",
     "querystring": ">=0.1.x",
     "tumblrwks": ">=0.1.x",
-    "cookies": "~0.3.6"
+    "cookies": "~0.3.6",
+    "evernote": "~1.25.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
