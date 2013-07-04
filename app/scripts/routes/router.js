@@ -1,4 +1,9 @@
 App.Router.map(function() {
-	this.route("blag");
-	this.route("multipost");
+	this.resource("multipost", function() {
+		this.route("new")
+	});
+	this.resource("blag", function() {
+		this.route("new")
+	});
+
 });

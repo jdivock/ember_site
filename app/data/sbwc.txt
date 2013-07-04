@@ -1,0 +1,112 @@
+
+-- LOGIN
+URL: http://southbrooklynwc.com/forum/member.php
+PAYLOAD
+action:do_login
+url:http://southbrooklynwc.com/forum/index.php
+quick_login:1
+quick_username:jdivock
+quick_password:###
+submit:Login
+quick_remember:yes
+
+--QUICK REPLY
+URL: http://southbrooklynwc.com/forum/newreply.php?ajax=1
+
+QUERY: ajax:1
+
+PAYLOAD
+my_post_key:2d606c3e74c53f9c610109ccf94e3ab1
+subject:RE: Divock's log: I was fat before it was cool
+action:do_newreply
+posthash:fa2d8c12d6ebaae11628a2dc688bbd29
+quoted_ids:
+lastpid:9355
+from_page:15
+tid:251
+method:quickreply
+message:test
+previewpost:Preview Post
+
+-- HIDDEN FIELDS
+<input type="hidden" name="my_post_key" value="2d606c3e74c53f9c610109ccf94e3ab1" />
+	<input type="hidden" name="subject" value="RE: Divock's log: I was fat before it was cool" />
+	<input type="hidden" name="action" value="do_newreply" />
+	<input type="hidden" name="posthash" value="27645b435f0bc83bcf4bdef105f651e5" id="posthash" />
+	<input type="hidden" name="quoted_ids" value="" id="quoted_ids" />
+	<input type="hidden" name="lastpid" id="lastpid" value="9355" />
+	<input type="hidden" name="from_page" value="15" />
+	<input type="hidden" name="tid" value="251" />
+	<input type="hidden" name="method" value="quickreply" />
+
+
+-- NEW REPLY
+http://southbrooklynwc.com/forum/newreply.php?tid=251&processed=1
+
+QUERY PARAMS:
+tid:251
+processed:1
+
+PAYLOAD:
+------WebKitFormBoundarypJmzCuz5QHCjgP3q
+Content-Disposition: form-data; name="my_post_key"
+
+2d606c3e74c53f9c610109ccf94e3ab1
+------WebKitFormBoundarypJmzCuz5QHCjgP3q
+Content-Disposition: form-data; name="subject"
+
+test1
+------WebKitFormBoundarypJmzCuz5QHCjgP3q
+Content-Disposition: form-data; name="icon"
+
+-1
+------WebKitFormBoundarypJmzCuz5QHCjgP3q
+Content-Disposition: form-data; name="message_new"
+
+test
+------WebKitFormBoundarypJmzCuz5QHCjgP3q
+Content-Disposition: form-data; name="message"
+
+test
+------WebKitFormBoundarypJmzCuz5QHCjgP3q
+Content-Disposition: form-data; name="postoptions[subscriptionmethod]"
+
+
+------WebKitFormBoundarypJmzCuz5QHCjgP3q
+Content-Disposition: form-data; name="attachment"; filename=""
+Content-Type: application/octet-stream
+
+
+------WebKitFormBoundarypJmzCuz5QHCjgP3q
+Content-Disposition: form-data; name="submit"
+
+Post Reply
+------WebKitFormBoundarypJmzCuz5QHCjgP3q
+Content-Disposition: form-data; name="action"
+
+do_newreply
+------WebKitFormBoundarypJmzCuz5QHCjgP3q
+Content-Disposition: form-data; name="replyto"
+
+0
+------WebKitFormBoundarypJmzCuz5QHCjgP3q
+Content-Disposition: form-data; name="posthash"
+
+234e085ce885c989d0fe938eccbd54cc
+------WebKitFormBoundarypJmzCuz5QHCjgP3q
+Content-Disposition: form-data; name="attachmentaid"
+
+
+------WebKitFormBoundarypJmzCuz5QHCjgP3q
+Content-Disposition: form-data; name="attachmentact"
+
+
+------WebKitFormBoundarypJmzCuz5QHCjgP3q
+Content-Disposition: form-data; name="quoted_ids"
+
+
+------WebKitFormBoundarypJmzCuz5QHCjgP3q
+Content-Disposition: form-data; name="tid"
+
+251
+------WebKitFormBoundarypJmzCuz5QHCjgP3q--

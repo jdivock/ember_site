@@ -1,0 +1,35 @@
+<h3>MultiPost</h3>
+
+<div class="row">
+	<form>
+		<div class="span6">
+			<label>Title</label>
+			{{view Ember.TextField valueBinding="title" action="submitMultiPost"}}
+
+			<label>Message</label>
+			{{view Ember.TextArea rows=10}}
+		</div>
+
+		<div class="span6">
+			<div class="control-group">
+			    <div class="controls">
+			      <label class="checkbox">
+			      	{{view Ember.Checkbox id="tumblr"}} Tumblr
+			      </label>
+			      <label class="checkbox">
+			        {{view Ember.Checkbox id="evernote"}} Evernote
+			      </label>
+			      <label class="checkbox">
+			        {{view Ember.Checkbox id="myBB"}} SBWC
+			      </label>
+			    </div>
+		  	</div>
+		</div>
+	</form>
+</div>
+
+
+		<div class="form-actions">
+		  <button type="submit" class="btn btn-primary" >Submit</button>
+		  <button type="button" class="btn">Cancel</button>
+		</div>
