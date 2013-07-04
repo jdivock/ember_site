@@ -1,6 +1,7 @@
 var express = require('express'),
 	OAuth = require('oauth').OAuth,
 	Tumblr = require('tumblrwks'),
+	Cookies = require('cookies'),
 	querystring = require('querystring');
 
 var allowCrossDomain = function(req, res, next) {
@@ -27,23 +28,21 @@ app.use(allowCrossDomain);
 app.use(express.static(__dirname + "/dist"));
 
 // Home Page
-app.get('/', function(request, response) {
-	//response.send('Working on it');
-	//console.log(request);
-
-	/*if (!request.session.tumblr_oauth_access_token) {
-		response.redirect("/tumblr_login");
-
-	} else {
-		response.redirect("/getTumblrUserInfo");
-	}*/
-});
-
 app.get('/checkSessions', function(request, response) {
 	var sessionCheck = new Object();
+
+	if (response.tumblrToken) {
+		request.session.tumblr_oauth_access_token = response.tumblrToken;
+		request.session.tumblr_oauth_access_token_secret = response.tumblrTokenSecret;
+	}
+
 	sessionCheck.tumblr = request.session.tumblr_oauth_access_token ? true : false;
 	sessionCheck.evernote = request.session.evernote_oauth_access_token ? true : false;
 	sessionCheck.mybb = request.session.mybb_oauth_accesss_token ? true : false;
+
+	console.log(request.session);
+
+	sessionCheck.tumblr_blogs = request.session.tumblr_blogs;
 
 	response.send(JSON.stringify(sessionCheck));
 });
@@ -56,13 +55,10 @@ app.get('/tumblr_login', function(request, response) {
 		process.env.MULTIPOST_CONSUME_KEY,
 		process.env.MULTIPOST_SECRET_KEY,
 		"1.0",
-		"http://google.com",
-	//"http://localhost:3000/tumblr_cb"+( request.param('action') && request.param('action') != "" ? "?action="+querystring.escape(request.param('action')) : "" ),
-	"HMAC-SHA1");
+		"http://localhost:3000/tumblr_cb" + (request.param('action') && request.param('action') != "" ? "?action=" + querystring.escape(request.param('action')) : ""),
+		"HMAC-SHA1");
 
 	oa.getOAuthRequestToken(function(error, oauth_token, oauth_token_secret, results) {
-
-		console.log("HERE");
 		if (error) {
 			console.log('error');
 			console.log(error);
@@ -108,6 +104,7 @@ app.get('/tumblr_cb', function(request, response) {
 			request.session.tumblr_oauth_access_token_secret = tumblr_oauth_access_token_secret;
 
 			response.redirect((request.param('action') && request.param('action') != "") ? request.param('action') : "/getTumblrUserInfo");
+
 		}
 
 	});
@@ -121,12 +118,12 @@ app.post('/postTumblr', require_tumblr_login, function(request, response) {
 		consumerSecret: request.session.oa._consumerSecret,
 		accessToken: request.session.tumblr_oauth_access_token,
 		accessSecret: request.session.tumblr_oauth_access_token_secret
-	}, request.session.tumblr_blog + ".tumblr.com");
+	}, request.tumblr_blog);
 
 	tumblr.post('/post', {
 		type: 'text',
 		title: request.body.title,
-		body: request.body.body
+		body: requesst.body.body
 	}, function(json) {
 		console.log(json);
 	});
@@ -157,14 +154,15 @@ app.get('/getTumblrUserInfo', require_tumblr_login, function(request, response) 
 		console.log("DATA: " + data);
 		var feed = JSON.parse(data);
 
-		request.session.tumblr_blog = feed.response.user.blogs[0].name;
-		console.log(request.session.tumblr_blog);
-		response.write(data);
+		request.session.tumblr_blogs = feed.response.user.blogs;
+		console.log(request.session.tumblr_blogs);
 
 
-
+		//response.write(data);
 		//response.write(JSON.stringify(data));
-		response.end();
+		//response.end();
+		response.redirect("/#/multipost");
+
 	})
 });
 

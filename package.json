@@ -5,7 +5,8 @@
     "express": "2.5.x",
     "oauth": ">=0.9.8",
     "querystring": ">=0.1.x",
-    "tumblrwks": ">=0.1.x"
+    "tumblrwks": ">=0.1.x",
+    "cookies": "~0.3.6"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
