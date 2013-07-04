@@ -3,7 +3,8 @@ var express = require('express'),
 	Tumblr = require('tumblrwks'),
 	Cookies = require('cookies'),
 	Evernote = require('evernote').Evernote,
-	querystring = require('querystring');
+	querystring = require('querystring'),
+	config = require('./config.json');
 
 var allowCrossDomain = function(req, res, next) {
 	res.header('Access-Control-Allow-Origin', "*");
@@ -12,8 +13,6 @@ var allowCrossDomain = function(req, res, next) {
 
 	next();
 }
-
-
 
 // Setup the Express.js server
 var app = express.createServer();
@@ -35,9 +34,7 @@ var evernoteClient = new Evernote.Client({
 	sandbox: true
 });
 
-
-// Home Page
-app.get('/checkSessions', function(req, res) {
+app.get('/multipost/checkSessions', function(req, res) {
 	var sessionCheck = new Object();
 
 	if (res.tumblrToken) {
@@ -51,7 +48,7 @@ app.get('/checkSessions', function(req, res) {
 	};
 
 	sessionCheck.evernote = {
-		active: sessionCheck.evernote = req.session.oauthAccessToken ? true : false,
+		active: sessionCheck.evernote = req.session.ev_oauthAccessToken ? true : false,
 		notebooks: req.session.notebooks
 	};
 
@@ -60,8 +57,8 @@ app.get('/checkSessions', function(req, res) {
 	res.send(JSON.stringify(sessionCheck));
 });
 
-app.get('/evernote_login', function(req, res) {
-	evernoteClient.getRequestToken('http://localhost:3000/evernote_cb', function(error, oauthToken, oauthTokenSecret, results) {
+app.get('/multipost/evernote_login', function(req, res) {
+	evernoteClient.getRequestToken('http://' + req.headers.host + '/multipost/evernote_cb', function(error, oauthToken, oauthTokenSecret, results) {
 		req.session.evernote_oauth_access_token = oauthToken;
 		req.session.evernote_oauth_access_token_secret = oauthTokenSecret;
 
@@ -69,7 +66,7 @@ app.get('/evernote_login', function(req, res) {
 	});
 });
 
-app.get('/evernote_cb', function(req, res) {
+app.get('/multipost/evernote_cb', function(req, res) {
 	console.log("EVERNOTE CALLBACK");
 	console.log(req.query);
 
@@ -78,8 +75,8 @@ app.get('/evernote_cb', function(req, res) {
 
 	evernoteClient.getAccessToken(req.session.evernote_oauth_access_token, req.session.evernote_oauth_access_token_secret, req.param('oauth_verifier'), function(error, oauthAccessToken, oauthAccessTokenSecret, results) {
 
-		req.session.oauthAccessToken = oauthAccessToken;
-		req.session.oauthAccessTokenSecret = oauthAccessTokenSecret;
+		req.session.ev_oauthAccessToken = oauthAccessToken;
+		req.session.ev_oauthAccessTokenSecret = oauthAccessTokenSecret;
 		req.session.edamShard = results.edam_shard;
 		req.session.edamUserId = results.edam_userId;
 		req.session.edamExpires = results.edam_expires;
@@ -87,16 +84,16 @@ app.get('/evernote_cb', function(req, res) {
 		req.session.edamWebApiUrlPrefix = results.edam_webApiUrlPrefix;
 
 		var client = new Evernote.Client({
-			token: req.session.oauthAccessToken,
+			token: req.session.ev_oauthAccessToken,
 			sandbox: true
 		});
-		req.session.note_store = client.getNoteStore();
-		req.session.note_store.listNotebooks(req.session.oauthAccessToken, function(notebooks) {
+		var note_store = client.getNoteStore();
+		note_store.listNotebooks(req.session.ev_oauthAccessToken, function(notebooks) {
 			req.session.notebooks = notebooks;
 			console.log("NOTEBOOKS");
 			console.log(notebooks);
 
-			res.redirect('/#/multipost');
+			res.redirect(config.testPrefix + '/#/multipost');
 
 		});
 
@@ -104,17 +101,17 @@ app.get('/evernote_cb', function(req, res) {
 	});
 });
 
-app.get('/tumblr_login', function(req, res) {
+app.get('/multipost/tumblr_login', function(req, res) {
 
-	var oa = new OAuth("http://www.tumblr.com/oauth/req_token",
+	var oa = new OAuth("http://www.tumblr.com/oauth/request_token",
 		"http://www.tumblr.com/oauth/access_token",
 		process.env.TUMBLR_CONSUME_KEY,
 		process.env.TUMBLR_SECRET_KEY,
 		"1.0",
-		"http://localhost:3000/tumblr_cb" + (req.param('action') && req.param('action') != "" ? "?action=" + querystring.escape(req.param('action')) : ""),
+		"http://" + req.headers.host + "/multipost/tumblr_cb" + (req.param('action') && req.param('action') != "" ? "?action=" + querystring.escape(req.param('action')) : ""),
 		"HMAC-SHA1");
 
-	oa.getOAuthreqToken(function(error, oauth_token, oauth_token_secret, results) {
+	oa.getOAuthRequestToken(function(error, oauth_token, oauth_token_secret, results) {
 		if (error) {
 			console.log('error');
 			console.log(error);
@@ -130,10 +127,10 @@ app.get('/tumblr_login', function(req, res) {
 			res.redirect("http://www.tumblr.com/oauth/authorize?oauth_token=" + oauth_token);
 		}
 	})
-})
+});
 
 // Callback for the authorization page
-app.get('/tumblr_cb', function(req, res) {
+app.get('/multipost/tumblr_cb', function(req, res) {
 
 	// get the OAuth access token with the 'oauth_verifier' that we received
 
@@ -161,7 +158,7 @@ app.get('/tumblr_cb', function(req, res) {
 			req.session.tumblr_oauth_access_token = tumblr_oauth_access_token;
 			req.session.tumblr_oauth_access_token_secret = tumblr_oauth_access_token_secret;
 
-			res.redirect((req.param('action') && req.param('action') != "") ? req.param('action') : "/getTumblrUserInfo");
+			res.redirect((req.param('action') && req.param('action') != "") ? req.param('action') : "/multipost/getTumblrUserInfo");
 
 		}
 
@@ -170,39 +167,54 @@ app.get('/tumblr_cb', function(req, res) {
 });
 
 
-app.post('/postMulti', function(req, res) {
+app.post('/multipost/posts', function(req, res) {
 
 	//TEST HARNESS
-	req.tumblr_blog = req.session.tumblr_blogs[0].name;
+	console.log(req.body);
 
-	req.evernote_notebook = req.session.notebooks[0];
+	// Don't need to enter a notebook, will go to default
+	// req.evernote_notebook = req.session.notebooks[0];
 
-	console.log("TUMB BLOG");
-	console.log(req.tumblr_blog);
+	console.log(req.session);
+
 
 	// POST TO TUMBLR
 	tumblr = new Tumblr({
-		consumerKey: req.session.oa._consumerKey,
-		consumerSecret: req.session.oa._consumerSecret,
+		consumerKey: process.env.TUMBLR_CONSUME_KEY,
+		consumerSecret: process.env.TUMBLR_SECRET_KEY,
 		accessToken: req.session.tumblr_oauth_access_token,
 		accessSecret: req.session.tumblr_oauth_access_token_secret
-	}, req.tumblr_blog);
+	}, req.session.tumblr_blogs[0].name + ".tumblr.com");
 
 	tumblr.post('/post', {
 		type: 'text',
-		title: req.body.title,
-		body: requesst.body.body
+		title: req.body.post.title,
+		body: req.body.post.post
 	}, function(json) {
+		console.log("TUMBLR POST COMPLETE: ");
 		console.log(json);
 	});
 
 	// POST TO EVERNOTE
-	var note = new Evernote.Note({
-		title: req.body.title,
-		content: requesst.body.body
-	})
+	var client = new Evernote.Client({
+		token: req.session.ev_oauthAccessToken,
+		sandbox: true
+	});
+	var note_store = client.getNoteStore();
 
-	req.session.note_store.createNote(req.session.oauthAccessToken, note, function(note) {
+	var note = new Evernote.Note({
+		title: req.body.post.title
+	});
+
+	note.content = '<?xml version="1.0" encoding="UTF-8"?>';
+	note.content += '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">';
+	note.content += '<en-note>' + req.body.post.post;
+	note.content += '</en-note>';
+
+	console.log("NOTE STORE");
+	console.log(note_store);
+
+	note_store.createNote(req.session.ev_oauthAccessToken, note, function(note) {
 		console.log("NOTE CREATED");
 		console.log(note);
 	});
@@ -213,7 +225,7 @@ app.post('/postMulti', function(req, res) {
 	})
 })
 
-app.get('/getTumblrUserInfo', require_tumblr_login, function(req, res) {
+app.get('/multipost/getTumblrUserInfo', require_tumblr_login, function(req, res) {
 
 	var oa = new OAuth(req.session.oa._reqUrl,
 		req.session.oa._accessUrl,
@@ -223,6 +235,7 @@ app.get('/getTumblrUserInfo', require_tumblr_login, function(req, res) {
 		req.session.oa._authorize_callback,
 		req.session.oa._signatureMethod);
 
+	var selfres = res;
 
 	console.log("GETTING TUMBLR INFO");
 
@@ -234,27 +247,25 @@ app.get('/getTumblrUserInfo', require_tumblr_login, function(req, res) {
 		console.log("DATA: " + data);
 		var feed = JSON.parse(data);
 
-		req.session.tumblr_blogs = feed.res.user.blogs;
-		console.log(req.session.tumblr_blogs);
-
+		req.session.tumblr_blogs = feed.response.user.blogs;
 
 		//res.write(data);
 		//res.write(JSON.stringify(data));
 		//res.end();
-		res.redirect("/#/multipost");
+		selfres.redirect(config.testPrefix + "/#/multipost");
 
 	})
 });
 
 function require_tumblr_login(req, res, next) {
 	if (!req.session.tumblr_oauth_access_token) {
-		res.redirect("/tumblr_login?action=" + querystring.escape(req.originalUrl));
+		res.redirect("/multipost/tumblr_login?action=" + querystring.escape(req.originalUrl));
 		return;
 	}
 	next();
 };
 
-app.get('/getTumblrInfo', require_tumblr_login, function(req, res) {
+app.get('/multipost/getTumblrInfo', require_tumblr_login, function(req, res) {
 
 	var oa = new OAuth(req.session.oa._reqUrl,
 		req.session.oa._accessUrl,

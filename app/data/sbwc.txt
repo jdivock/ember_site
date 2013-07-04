@@ -29,6 +29,7 @@ message:test
 previewpost:Preview Post
 
 -- HIDDEN FIELDS
+URL: http://southbrooklynwc.com/forum/showthread.php?tid=251&page=15
 <input type="hidden" name="my_post_key" value="2d606c3e74c53f9c610109ccf94e3ab1" />
 	<input type="hidden" name="subject" value="RE: Divock's log: I was fat before it was cool" />
 	<input type="hidden" name="action" value="do_newreply" />

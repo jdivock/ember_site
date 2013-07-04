@@ -4,10 +4,10 @@
 	<form>
 		<div class="span6">
 			<label>Title</label>
-			{{view Ember.TextField valueBinding="title" action="submitMultiPost"}}
+			{{view Ember.TextField valueBinding="title"}}
 
 			<label>Message</label>
-			{{view Ember.TextArea rows=10}}
+			{{view Ember.TextArea rows=10 valueBinding="post"}}
 		</div>
 
 		<div class="span6">
@@ -30,6 +30,6 @@
 
 
 		<div class="form-actions">
-		  <button type="submit" class="btn btn-primary" >Submit</button>
+		  <button type="submit" class="btn btn-primary" {{action "submitMultiPost"}}>Submit</button>
 		  <button type="button" class="btn">Cancel</button>
 		</div>
