@@ -7,7 +7,8 @@
     "querystring": ">=0.1.x",
     "tumblrwks": ">=0.1.x",
     "cookies": "~0.3.6",
-    "evernote": "~1.25.0"
+    "evernote": "~1.25.0",
+    "async": "~0.2.9"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
