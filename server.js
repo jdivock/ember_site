@@ -29,14 +29,18 @@ if (process.argv[2] === 'dist') {
 }
 
 // Routes
-app.get('/multipost/checkSessions', routes.checkSessions);
 app.get('/multipost/evernote_login', routes.evernote_login);
 app.get('/multipost/evernote_cb', routes.evernote_cb);
 app.get('/multipost/tumblr_login', routes.tumblr_login);
 app.get('/multipost/tumblr_cb', routes.tumblr_cb);
 app.get('/multipost/getTumblrUserInfo', routes.getTumblrUserInfo);
 
+app.get('/multipost/posts/:id', routes.checkSessions);
 app.post('/multipost/posts', routes.multiPostPosts);
+
+app.get('/multipost/blogs', routes.require_tumblr_login, routes.getBlogs);
+
+app.get('/multipost/notebooks', routes.require_evernote_login, routes.getNotebooks);
 
 
 

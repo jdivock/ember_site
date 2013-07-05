@@ -1,7 +1,13 @@
 $FontAwesomePath: "./fonts" !default;
 
-@import "bootstrap-sass/lib/bootstrap";
-@import "font-awesome/scss/font-awesome";
+
+@import "bower_components/font-awesome/scss/font-awesome";
+@import "vendor/css/docs";
+@import "vendor/css/custom";
+@import "vendor/css/prettify";
+@import "vendor/css/bootstrap";
+@import "vendor/css/bootstrap-responsive";
+@import "vendor/css/color-nytimes";
 
 /* Put your CSS here */
 
@@ -31,6 +37,9 @@ footer {
 		font-size: 1.5em;
 	}
 }
+
+
+
 
 
 

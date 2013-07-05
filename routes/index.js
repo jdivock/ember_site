@@ -4,71 +4,78 @@ var Evernote = require('evernote').Evernote,
 	async = require('async'),
 	Tumblr = require('tumblrwks');
 
-exports.checkSessions = function(req, res) {
-	var sessionCheck = new Object();
-
-	sessionCheck.tumblr = {
-		active: req.session.tumblr_oauth_access_token ? true : false
-	};
-
-	sessionCheck.evernote = {
-		active: sessionCheck.evernote = req.session.evernote_oauth_access_token ? true : false
-	};
-
-	sessionCheck.mybb = req.session.mybb_oauth_accesss_token ? true : false;
-
-	async.parallel([
-		function(cb) {
-			if (sessionCheck.evernote.active) {
-				var client = new Evernote.Client({
-					token: req.session.evernote_oauth_access_token,
-					sandbox: true
-				});
-				var note_store = client.getNoteStore();
-				note_store.listNotebooks(req.session.evernote_oauth_access_token, function(notebooks) {
-					console.log("NOTEBOOKS");
-					console.log(notebooks);
-
-					sessionCheck.evernote.notebooks = notebooks;
-					cb();
-				});
-			} else {
-				cb();
-			}
-		},
-		function(cb) {
-			if (sessionCheck.tumblr.active) {
-				var oa = new OAuth(req.session.oa._reqUrl,
-					req.session.oa._accessUrl,
-					req.session.oa._consumerKey,
-					req.session.oa._consumerSecret,
-					req.session.oa._version,
-					req.session.oa._authorize_callback,
-					req.session.oa._signatureMethod);
-
-				console.log("GETTING TUMBLR INFO");
-
-				oa.getProtectedResource(
-					"http://api.tumblr.com/v2/user/info	",
-					"GET",
-					req.session.tumblr_oauth_access_token,
-					req.session.tumblr_oauth_access_token_secret, function(error, data, res) {
-					console.log("DATA: " + data);
-					var feed = JSON.parse(data);
-
-					sessionCheck.tumblr.blogs = feed.response.user.blogs;
-					cb();
-
-				})
-			} else {
-				cb();
-			}
-
-		}
-	], function(err, results) {
-
-		res.send(JSON.stringify(sessionCheck));
+exports.getNotebooks = function(req, res) {
+	var client = new Evernote.Client({
+		token: req.session.evernote_oauth_access_token,
+		sandbox: true
 	});
+	var note_store = client.getNoteStore();
+	note_store.listNotebooks(req.session.evernote_oauth_access_token, function(notebooks) {
+		console.log("NOTEBOOKS");
+		console.log(notebooks);
+
+		res.send(JSON.stringify({
+			"notebooks": notebooks
+		}));
+	})
+};
+
+exports.require_tumblr_login = function(req, res, next) {
+	if (!req.session.tumblr_oauth_access_token) {
+		//res.redirect("/multipost/tumblr_login?action=" + querystring.escape(req.originalUrl));
+		res.send();
+		return;
+	}
+	next();
+};
+
+exports.getBlogs = function(req, res) {
+	var oa = new OAuth(req.session.oa._reqUrl,
+		req.session.oa._accessUrl,
+		req.session.oa._consumerKey,
+		req.session.oa._consumerSecret,
+		req.session.oa._version,
+		req.session.oa._authorize_callback,
+		req.session.oa._signatureMethod);
+
+	console.log("GETTING TUMBLR INFO");
+
+	var seflRes = res;
+
+	oa.getProtectedResource(
+		"http://api.tumblr.com/v2/user/info	",
+		"GET",
+		req.session.tumblr_oauth_access_token,
+		req.session.tumblr_oauth_access_token_secret, function(error, data, res) {
+		console.log("DATA: " + data);
+		var feed = JSON.parse(data);
+
+		seflRes.send(JSON.stringify({
+			"blogs": feed.response.user.blogs
+		}))
+	});
+
+};
+
+exports.checkSessions = function(req, res) {
+
+	res.send(JSON.stringify({
+		"post": {
+			id: "singleton",
+			evernote_session: req.session.evernote_oauth_access_token ? true : false,
+			tumblr_session: req.session.tumblr_oauth_access_token ? true : false,
+			sbwc_session: req.session.mybb_oauth_accesss_token ? true : false
+		}
+	}));
+};
+
+exports.require_evernote_login = function(req, res, next) {
+	if (!req.session.evernote_oauth_access_token) {
+		//res.redirect("/multipost/evernote_login?action=" + querystring.escape(req.originalUrl));
+		res.send();
+		return;
+	}
+	next();
 };
 
 exports.evernote_login = function(req, res) {
@@ -215,17 +222,4 @@ exports.multiPostPosts = function(req, res) {
 	res.send({
 		"status": "ok"
 	})
-};
-
-exports.getTumblrUserInfo = function(req, res) {
-
-
-};
-
-function require_tumblr_login(req, res, next) {
-	if (!req.session.tumblr_oauth_access_token) {
-		res.redirect("/multipost/tumblr_login?action=" + querystring.escape(req.originalUrl));
-		return;
-	}
-	next();
 };

@@ -9,6 +9,14 @@ App.Router.map(function() {
 
 App.MultipostIndexRoute = Ember.Route.extend({
 	model: function() {
-		return App.Post.createRecord();
+
+		return App.Post.find('singleton');
+		//return App.Notebook.find();
+	},
+	setupController: function(controller, model) {
+		controller.set('session', model);
+		controller.set('notebooks', App.Notebook.find());
+		controller.set('blogs', App.Blog.find());
+
 	}
 });
