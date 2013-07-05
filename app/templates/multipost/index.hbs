@@ -1,8 +1,5 @@
 <h3>MultiPost</h3>
 
-
-tumb: {{tumblrVisible}}
-
 <div class="row">
 	<form>
 		<div class="span6">
@@ -19,11 +16,11 @@ tumb: {{tumblrVisible}}
 			      <label class="checkbox">
 			      	{{view Ember.Checkbox id="tumblr" disabledBinding="disabledTumblr" checkedBinding="session.tumblrActive"}} Tumblr
 			      </label>
-			      {{view Ember.Select contentBinding="blogs" isVisible="disabledSBWC" optionLabelPath="content.title" optionValuePath="content.name" valueBinding="session.tumblrBlog" }}
+			      {{view Ember.Select contentBinding="blogs" disabledBinding="disabledTumblr" optionLabelPath="content.title" optionValuePath="content.name" valueBinding="session.tumblrBlog" }}
 			      <label class="checkbox"> 
 			        {{view Ember.Checkbox id="evernote" disabledBinding="disabledEvernote" checkedBinding="session.evernoteActive"}} Evernote
 			      </label>
-			      {{view Ember.Select contentBinding="notebooks" optionLabelPath="content.name" optionValuePath="content.guid" valueBinding="session.evernoteNotebook"}}
+			      {{view Ember.Select contentBinding="notebooks" disabledBinding="disabledEvernote" optionLabelPath="content.name" optionValuePath="content.guid" valueBinding="session.evernoteNotebook"}}
 			      <label class="checkbox">
 			        {{view Ember.Checkbox id="sbwc" disabledBinding="disabledSBWC" checkedBinding="session.sbwcActive"}} SBWC
 			      </label>
