@@ -1,41 +1,33 @@
 <h3>MultiPost</h3>
 
-<div >NOTEBOOK: </div>
 
-<!-- {{#each notebook in controller.notebooks}}
-NAME: {{notebook.name}}
-{{/each}}
-
-<div>BLOG</div>
-{{#each blog in controller.blogs}}
-NAME: {{blog.name}}
-{{/each}} -->	
-
-<div>SESSION: {{session.tumblrSession}}</div>
-
+tumb: {{tumblrVisible}}
 
 <div class="row">
 	<form>
 		<div class="span6">
 			<label>Title</label>
-			{{view Ember.TextField valueBinding="title"}}
+			{{view Ember.TextField valueBinding="session.title"}}
 
 			<label>Message</label>
-			{{view Ember.TextArea rows=10 valueBinding="post"}}
+			{{view Ember.TextArea rows=10 valueBinding="session.post"}}
 		</div>
 
 		<div class="span6">
 			<div class="control-group">
 			    <div class="controls">
 			      <label class="checkbox">
-			      	{{view Ember.Checkbox id="tumblr" disabledBinding="disabledTumblr"}} Tumblr
+			      	{{view Ember.Checkbox id="tumblr" disabledBinding="disabledTumblr" checkedBinding="session.tumblrActive"}} Tumblr
 			      </label>
+			      {{view Ember.Select contentBinding="blogs" isVisible="disabledSBWC" optionLabelPath="content.title" optionValuePath="content.name" valueBinding="session.tumblrBlog" }}
+			      <label class="checkbox"> 
+			        {{view Ember.Checkbox id="evernote" disabledBinding="disabledEvernote" checkedBinding="session.evernoteActive"}} Evernote
+			      </label>
+			      {{view Ember.Select contentBinding="notebooks" optionLabelPath="content.name" optionValuePath="content.guid" valueBinding="session.evernoteNotebook"}}
 			      <label class="checkbox">
-			        {{view Ember.Checkbox id="evernote" disabledBinding="!session.tumblrSession"}} Evernote
+			        {{view Ember.Checkbox id="sbwc" disabledBinding="disabledSBWC" checkedBinding="session.sbwcActive"}} SBWC
 			      </label>
-			      <label class="checkbox">
-			        {{view Ember.Checkbox id="myBB"}} SBWC
-			      </label>
+			      {{view Ember.TextField disabledBinding="disabledSBWC" valueBinding="session.sbwcThreadId"}}
 			    </div>
 		  	</div>
 		</div>

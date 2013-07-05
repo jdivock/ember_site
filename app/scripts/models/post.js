@@ -1,18 +1,15 @@
 App.Post = DS.Model.extend({
 	title: DS.attr('string'),
 	post: DS.attr('string'),
-	evernote: {
-		selected: DS.attr('boolean'),
-		notebook: DS.attr('string')
-	},
-	tumblr: {
-		selected: DS.attr('boolean'),
-		blog: DS.attr('string')
-	},
-	sbwc: {
-		selected: DS.attr('boolean'),
-		threadId: DS.attr('string')
-	},
+
+	evernoteActive: DS.attr('string'),
+	evernoteNotebook: DS.attr('string'),
+
+	tumblrActive: DS.attr('boolean'),
+	tumblrBlog: DS.attr('string'),
+
+	sbwcActive: DS.attr('boolean'),
+	sbwcTheadId: DS.attr('string'),
 
 	evernoteSession: DS.attr('boolean'),
 	tumblrSession: DS.attr('boolean'),
