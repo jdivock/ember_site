@@ -3,11 +3,8 @@ $FontAwesomePath: "./fonts" !default;
 
 @import "bower_components/font-awesome/scss/font-awesome";
 @import "bower_components/bootstrap-sass/lib/bootstrap";
-@import "bower_components/bootstrap-sass/lib/responsive";
-
 
 /* Put your CSS here */
-
 textarea {
 	width: 90%
 }
@@ -34,10 +31,8 @@ footer {
 		color: #000;
 		cursor: pointer;
 	}
-	/*i:hover{
-		font-size: 1.5em;
-	}*/
 }
+
 
 
 
