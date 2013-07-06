@@ -52,6 +52,12 @@
 			      {{#if session.sbwcActive}}
 			      <label>Thread ID</label>
 			      {{view Ember.TextField valueBinding="session.sbwcThreadId"}}
+			      {{else}}
+			      	<legend>Login</legend>
+			      	<label>Username</label>
+			      	{{view Ember.TextField valueBinding="sbwc.userName"}}
+			      	<label>Password</label>
+			      	{{view Ember.TextField type="password" valueBinding="sbwc.password"}}
 			      {{/if}}
 			    </div>
 		  	</div>

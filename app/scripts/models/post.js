@@ -17,6 +17,11 @@ App.Post = DS.Model.extend({
 
 });
 
+App.SBWC = DS.Model.extend({
+	userName: DS.attr('string'),
+	password: DS.attr('string')
+})
+
 App.Notebook = DS.Model.extend({
 	name: DS.attr('string'),
 	guid: DS.attr('string')
