@@ -42,7 +42,9 @@ app.get('/multipost/blogs', routes.require_tumblr_login, routes.getBlogs);
 
 app.get('/multipost/notebooks', routes.require_evernote_login, routes.getNotebooks);
 
-
+app.post('/multipost/sbwc', routes.sbwcLogin);
+app.get('/multipost/sbwcPost', routes.sbwcPost);
+app.get('/multipost/sbwc', routes.sbwcLogin);
 
 var port = process.env.PORT || 3000;
 console.log("listening on http://localhost:" + port);

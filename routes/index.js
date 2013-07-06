@@ -2,7 +2,114 @@ var Evernote = require('evernote').Evernote,
 	OAuth = require('oauth').OAuth,
 	querystring = require('querystring'),
 	async = require('async'),
+	needle = require('needle'),
 	Tumblr = require('tumblrwks');
+
+
+exports.sbwcLogin = function(req, res) {
+
+	//var username = req.body.sbwc.username;
+	//var password = req.body.sbwc.login;
+
+	username = 'jdivock';
+	password = '####';
+
+	needle.post('http://southbrooklynwc.com/forum/member.php', {
+		action: 'do_login',
+		quick_login: 1,
+		quick_username: username,
+		quick_password: password,
+		submit: 'Login'
+	}, function(err, resp, body) {
+		if (err) {
+			console.log("ERROR: ");
+			console.log(err);
+			res.send({
+				'success': false
+			});
+		} else {
+			console.log("RESP: ");
+			console.log(body);
+
+			//check response for positive login?
+			var regex = /my_post_key\s=\s\"(\w*)\"/;
+			var result = body.match(regex);
+
+			var badLoginRegex = /You have entered an invalid username/;
+			var resultBad = body.match(badLoginRegex);
+
+			var captchaRegex = /captcha/;
+			var captcha = body.match(captchaRegex);
+
+			console.log("RESULTBAD: " + resultBad);
+
+			console.log("CAPTHCHAD: " + captcha);
+
+			if (resultBad) {
+				res.send(JSON.stringify({
+					'success': 'false',
+					'code': "BAD_LOGIN"
+				}));
+			} else if (captcha) {
+				res.send(JSON.stringify({
+					'success': 'false',
+					'code': "CAPTCHA"
+				}));
+			} else {
+				req.session.sbwcPostKey = result[1];
+
+				needle.post("http://southbrooklynwc.com/forum/newreply.php?ajax=1", {
+					my_post_key: req.session.sbwcPostKey,
+					//subject: req.body.post.title,
+					//tid: req.body.post.threadId,
+					//message: req.body.post.post,
+					tid: 251,
+					subject: "test",
+					message: "asdf",
+					action: 'do_newreply',
+					method: 'quickreply'
+				}, function(err, resp, body) {
+					console.log(body);
+					console.log(err);
+					console.log(resp);
+					res.send(body);
+				})
+
+
+
+				/*res.send(JSON.stringify({
+					'success': 'true'
+				}));*/
+			}
+
+		}
+	});
+
+};
+
+exports.sbwcPost = function(req, res) {
+
+	/*req.body.threadId = 251;
+	req.body.post.title = "test";
+	req.body.post.post = "asdf";*/
+
+	needle.post("http://southbrooklynwc.com/forum/newreply.php?ajax=1", {
+		my_post_key: req.session.sbwcPostKey,
+		//subject: req.body.post.title,
+		//tid: req.body.post.threadId,
+		//message: req.body.post.post,
+		tid: 251,
+		subject: "test",
+		message: "asdf",
+		action: 'do_newreply',
+		method: 'quickreply'
+	}, function(err, resp, body) {
+		console.log(body);
+		console.log(err);
+		console.log(resp);
+		res.send(body);
+	})
+};
 
 exports.getNotebooks = function(req, res) {
 	var client = new Evernote.Client({
