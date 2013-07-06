@@ -18,7 +18,8 @@ App.Post = DS.Model.extend({
 });
 
 App.Notebook = DS.Model.extend({
-	name: DS.attr('string')
+	name: DS.attr('string'),
+	guid: DS.attr('string')
 });
 
 App.Blog = DS.Model.extend({

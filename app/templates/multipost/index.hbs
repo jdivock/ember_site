@@ -13,18 +13,42 @@
 		<div class="span6">
 			<div class="control-group">
 			    <div class="controls">
+			      
+			      {{#if disabledTumblr}}
+			      <p>
+			      	<a class='btn' href="/multipost/tumblr_login">Authenticate with Tumblr</a>
+			      </p>
+			      {{else}}
 			      <label class="checkbox">
-			      	{{view Ember.Checkbox id="tumblr" disabledBinding="disabledTumblr" checkedBinding="session.tumblrActive"}} Tumblr
+			      	{{view Ember.Checkbox id="tumblr" disabledBinding="disabledTumblr" checkedBinding="session.tumblrActive"}} 
+			      	Tumblr
 			      </label>
-			      {{view Ember.Select contentBinding="blogs" disabledBinding="disabledTumblr" optionLabelPath="content.title" optionValuePath="content.name" valueBinding="session.tumblrBlog" }}
+			      {{/if}}
+			      
+			      {{#if session.tumblrActive}}
+			      {{view Ember.Select contentBinding="blogs" optionLabelPath="content.title" optionValuePath="content.name" valueBinding="session.tumblrBlog" }}
+			      {{/if}}
+
+			      {{#if disabledEvernote}}
+			      <a class="btn" href="/multipost/evernote_login">Authenticate with Evernote</a>
+			      {{else}}
 			      <label class="checkbox"> 
-			        {{view Ember.Checkbox id="evernote" disabledBinding="disabledEvernote" checkedBinding="session.evernoteActive"}} Evernote
+			        {{view Ember.Checkbox id="evernote" disabledBinding="disabledEvernote" checkedBinding="session.evernoteActive"}} 
+			        Evernote
 			      </label>
-			      {{view Ember.Select contentBinding="notebooks" disabledBinding="disabledEvernote" optionLabelPath="content.name" optionValuePath="content.guid" valueBinding="session.evernoteNotebook"}}
+			      {{/if}}
+
+			      {{#if session.evernoteActive}}
+			      {{view Ember.Select contentBinding="notebooks" optionLabelPath="content.name" optionValuePath="content.guid" valueBinding="session.evernoteNotebook"}}
+			      {{/if}}
+
+
 			      <label class="checkbox">
-			        {{view Ember.Checkbox id="sbwc" disabledBinding="disabledSBWC" checkedBinding="session.sbwcActive"}} SBWC
+			        {{view Ember.Checkbox id="sbwc" checkedBinding="session.sbwcActive"}} SBWC
 			      </label>
-			      {{view Ember.TextField disabledBinding="disabledSBWC" valueBinding="session.sbwcThreadId"}}
+			      {{#if session.sbwcActive}}
+			      {{view Ember.TextField disabledBinding="session.sbwcActive" valueBinding="session.sbwcThreadId"}}
+			      {{/if}}
 			    </div>
 		  	</div>
 		</div>
@@ -32,7 +56,7 @@
 </div>
 
 
-		<div class="form-actions">
-		  <button type="submit" class="btn btn-primary" {{action "submitMultiPost"}}>Submit</button>
-		  <button type="button" class="btn">Cancel</button>
-		</div>
+<div class="form-actions">
+  <button type="submit" class="btn btn-primary" {{action "submitMultiPost"}}>Submit</button>
+  <button type="button" class="btn">Cancel</button>
+</div>

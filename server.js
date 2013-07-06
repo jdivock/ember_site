@@ -36,7 +36,7 @@ app.get('/multipost/tumblr_cb', routes.tumblr_cb);
 app.get('/multipost/getTumblrUserInfo', routes.getTumblrUserInfo);
 
 app.get('/multipost/posts/:id', routes.checkSessions);
-app.post('/multipost/posts', routes.multiPostPosts);
+app.put('/multipost/posts/:id', routes.multiPostPosts);
 
 app.get('/multipost/blogs', routes.require_tumblr_login, routes.getBlogs);
 

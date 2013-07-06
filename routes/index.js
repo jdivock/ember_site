@@ -186,7 +186,7 @@ exports.multiPostPosts = function(req, res) {
 		consumerSecret: process.env.TUMBLR_SECRET_KEY,
 		accessToken: req.session.tumblr_oauth_access_token,
 		accessSecret: req.session.tumblr_oauth_access_token_secret
-	}, req.session.tumblr_blogs[0].name + ".tumblr.com");
+	}, req.body.post.tumblr_blog + ".tumblr.com");
 
 	tumblr.post('/post', {
 		type: 'text',
@@ -205,7 +205,8 @@ exports.multiPostPosts = function(req, res) {
 	var note_store = client.getNoteStore();
 
 	var note = new Evernote.Note({
-		title: req.body.post.title
+		title: req.body.post.title,
+		guid: req.body.post.guid
 	});
 
 	note.content = '<?xml version="1.0" encoding="UTF-8"?>';
