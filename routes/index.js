@@ -166,6 +166,8 @@ exports.getBlogs = function(req, res) {
 
 exports.checkSessions = function(req, res) {
 
+	console.log(req.session.evernote_active);
+
 	res.send(JSON.stringify({
 		"post": {
 			id: "singleton",
@@ -335,6 +337,8 @@ function postEvernote(req, res, cb) {
 exports.multiPostPosts = function(req, res) {
 	// Don't need to enter a notebook, will go to default
 	// req.evernote_notebook = req.session.notebooks[0];
+
+
 
 	async.parallel([
 		function(cb) {

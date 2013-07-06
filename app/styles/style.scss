@@ -2,15 +2,9 @@ $FontAwesomePath: "./fonts" !default;
 
 
 @import "bower_components/font-awesome/scss/font-awesome";
-@import "vendor/css/docs";
-@import "vendor/css/custom";
-@import "vendor/css/prettify";
-@import "vendor/css/bootstrap";
-@import "vendor/css/bootstrap-responsive";
-@import "vendor/css/color-nytimes";
-//@import "vendor/css/glyphicons";
-//@import "vendor/css/halflings";
-@import "vendor/css/socialicons";
+@import "bower_components/bootstrap-sass/lib/bootstrap";
+@import "bower_components/bootstrap-sass/lib/responsive";
+
 
 /* Put your CSS here */
 

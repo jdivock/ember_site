@@ -1,8 +1,19 @@
 App.MultipostIndexController = Ember.ArrayController.extend({
+	titleWarn: false,
+	postWarn: false,
+	postSuccess: false,
 	submitMultiPost: function() {
-		console.log(this.get('session.evernoteNotebook'));
-		console.log(this.get('session.tumblrBlog'));
-		this.get('session').save();
+
+		if ($.trim(this.get('session.title')) === '') {
+			this.set('titleWarn', true);
+		}
+		if ($.trim(this.get('session.post')) === '') {
+			this.set('postWarn', true);
+		}
+		if ($.trim(this.get('session.post')) !== '' && $.trim(this.get('session.title')) !== '') {
+			this.get('session').save();
+		}
+
 	},
 	blogVisible: Ember.computed.and('session.tumblrActive', 'session.tumblrSession'),
 	notebookVisible: Ember.computed.and('session.evernoteActive', 'session.evernoteSession'),

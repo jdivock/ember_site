@@ -3,11 +3,15 @@
 <div class="row">
 	<form>
 		<div class="span6">
-			<label>Title</label>
-			{{view Ember.TextField valueBinding="session.title"}}
+			<div class="control-group" {{bindAttr class="titleWarn:error"}}>
+				<label class="control-label">Title</label>
+				{{view Ember.TextField valueBinding="session.title"}}
+			</div>
 
-			<label>Message</label>
-			{{view Ember.TextArea rows=10 valueBinding="session.post"}}
+			<div class="control-group" {{bindAttr class="postWarn:error"}}>
+				<label class="control-label">Message</label>
+				{{view Ember.TextArea rows=10 valueBinding="session.post"}}
+			</div>
 		</div>
 
 		<div class="span6">
