@@ -13,11 +13,8 @@
 		<div class="span6">
 			<div class="control-group">
 			    <div class="controls">
-			      
-			      {{#if disabledTumblr}}
-			      <p>
+			      {{#if disabledTumblr}}	      
 			      	<a class='btn' href="/multipost/tumblr_login">Authenticate with Tumblr</a>
-			      </p>
 			      {{else}}
 			      <label class="checkbox">
 			      	{{view Ember.Checkbox id="tumblr" disabledBinding="disabledTumblr" checkedBinding="session.tumblrActive"}} 
@@ -25,10 +22,13 @@
 			      </label>
 			      {{/if}}
 			      
-			      {{#if session.tumblrActive}}
-			      {{view Ember.Select contentBinding="blogs" optionLabelPath="content.title" optionValuePath="content.name" valueBinding="session.tumblrBlog" }}
-			      {{/if}}
+			      {{view Ember.Select contentBinding="blogs" isVisibleBinding="blogVisible" optionLabelPath="content.title" optionValuePath="content.name" valueBinding="session.tumblrBlog" }}
+			    
+			      </div>
+			  </div>
 
+			<div class="control-group">
+			    <div class="controls">
 			      {{#if disabledEvernote}}
 			      <a class="btn" href="/multipost/evernote_login">Authenticate with Evernote</a>
 			      {{else}}
@@ -38,16 +38,20 @@
 			      </label>
 			      {{/if}}
 
-			      {{#if session.evernoteActive}}
-			      {{view Ember.Select contentBinding="notebooks" optionLabelPath="content.name" optionValuePath="content.guid" valueBinding="session.evernoteNotebook"}}
-			      {{/if}}
+			      {{view Ember.Select contentBinding="notebooks" isVisibleBinding="notebookVisible" optionLabelPath="content.name" optionValuePath="content.guid" valueBinding="session.evernoteNotebook"}}
+			       </div>
+			  </div>
+
+			<div class="control-group">
+			    <div class="controls">
 
 
 			      <label class="checkbox">
 			        {{view Ember.Checkbox id="sbwc" checkedBinding="session.sbwcActive"}} SBWC
 			      </label>
 			      {{#if session.sbwcActive}}
-			      {{view Ember.TextField disabledBinding="session.sbwcActive" valueBinding="session.sbwcThreadId"}}
+			      <label>Thread ID</label>
+			      {{view Ember.TextField valueBinding="session.sbwcThreadId"}}
 			      {{/if}}
 			    </div>
 		  	</div>

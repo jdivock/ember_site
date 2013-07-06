@@ -4,7 +4,8 @@ App.MultipostIndexController = Ember.ArrayController.extend({
 		console.log(this.get('session.tumblrBlog'));
 		this.get('session').save();
 	},
-	tumblrVisible: Ember.computed.bool('false'),
+	blogVisible: Ember.computed.and('session.tumblrActive', 'session.tumblrSession'),
+	notebookVisible: Ember.computed.and('session.evernoteActive', 'session.evernoteSession'),
 	disabledTumblr: Ember.computed.not('session.tumblrSession'),
 	disabledEvernote: Ember.computed.not('session.evernoteSession'),
 	disabledSBWC: Ember.computed.not('session.sbwcSession')

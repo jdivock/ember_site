@@ -9,7 +9,7 @@ App.Post = DS.Model.extend({
 	tumblrBlog: DS.attr('string'),
 
 	sbwcActive: DS.attr('boolean'),
-	sbwcTheadId: DS.attr('string'),
+	sbwcThreadId: DS.attr('string'),
 
 	evernoteSession: DS.attr('boolean'),
 	tumblrSession: DS.attr('boolean'),

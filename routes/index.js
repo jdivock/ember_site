@@ -64,7 +64,9 @@ exports.checkSessions = function(req, res) {
 			id: "singleton",
 			evernote_session: req.session.evernote_oauth_access_token ? true : false,
 			tumblr_session: req.session.tumblr_oauth_access_token ? true : false,
-			sbwc_session: req.session.mybb_oauth_accesss_token ? true : false
+			sbwc_session: req.session.mybb_oauth_accesss_token ? true : false,
+			tumblr_active: req.session.tumblr_active,
+			evernote_active: req.session.evernote_active
 		}
 	}));
 };
@@ -109,6 +111,8 @@ exports.evernote_cb = function(req, res) {
 		req.session.edamExpires = results.edam_expires;
 		req.session.edamNoteStoreUrl = results.edam_noteStoreUrl;
 		req.session.edamWebApiUrlPrefix = results.edam_webApiUrlPrefix;
+
+		req.session.evernote_active = true;
 
 		res.redirect('/#/multipost');
 	});
@@ -166,6 +170,7 @@ exports.tumblr_cb = function(req, res) {
 			// store the access token in the session
 			req.session.tumblr_oauth_access_token = tumblr_oauth_access_token;
 			req.session.tumblr_oauth_access_token_secret = tumblr_oauth_access_token_secret;
+			req.session.tumblr_active = true;
 
 			res.redirect('/#/multipost');
 
@@ -175,12 +180,8 @@ exports.tumblr_cb = function(req, res) {
 
 };
 
-
-exports.multiPostPosts = function(req, res) {
-	// Don't need to enter a notebook, will go to default
-	// req.evernote_notebook = req.session.notebooks[0];
-
-	// POST TO TUMBLR
+function postTumblr(req, res, cb) {
+	req.session.tumblr_active = true;
 	tumblr = new Tumblr({
 		consumerKey: process.env.TUMBLR_CONSUME_KEY,
 		consumerSecret: process.env.TUMBLR_SECRET_KEY,
@@ -195,9 +196,12 @@ exports.multiPostPosts = function(req, res) {
 	}, function(json) {
 		console.log("TUMBLR POST COMPLETE: ");
 		console.log(json);
+		cb();
 	});
+};
 
-	// POST TO EVERNOTE
+function postEvernote(req, res, cb) {
+	req.session.evernote_active = true;
 	var client = new Evernote.Client({
 		token: req.session.evernote_oauth_access_token,
 		sandbox: true
@@ -217,10 +221,35 @@ exports.multiPostPosts = function(req, res) {
 	note_store.createNote(req.session.evernote_oauth_access_token, note, function(note) {
 		console.log("NOTE CREATED");
 		console.log(note);
+		cb();
+	});
+};
+
+exports.multiPostPosts = function(req, res) {
+	// Don't need to enter a notebook, will go to default
+	// req.evernote_notebook = req.session.notebooks[0];
+
+	async.parallel([
+		function(cb) {
+			if (req.body.post.tumblr_active) {
+				postTumblr(req, res, cb);
+			} else {
+				req.session.tumblr_active = false;
+				cb();
+			}
+		},
+		function(cb) {
+			if (req.body.post.evernote_active) {
+				postEvernote(req, res, cb);
+			} else {
+				req.session.evernote_active = false;
+				cb();
+			}
+		}
+	], function() {
+		res.send({
+			"status": "ok"
+		})
 	});
 
-
-	res.send({
-		"status": "ok"
-	})
 };

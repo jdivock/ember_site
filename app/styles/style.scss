@@ -8,14 +8,18 @@ $FontAwesomePath: "./fonts" !default;
 @import "vendor/css/bootstrap";
 @import "vendor/css/bootstrap-responsive";
 @import "vendor/css/color-nytimes";
-@import "vendor/css/glyphicons";
-@import "vendor/css/halflings";
+//@import "vendor/css/glyphicons";
+//@import "vendor/css/halflings";
 @import "vendor/css/socialicons";
 
 /* Put your CSS here */
 
 textarea {
 	width: 90%
+}
+
+ul.nav li:hover{
+	cursor: pointer;
 }
 
 footer {
