@@ -15,6 +15,7 @@ App.MultipostIndexRoute = Ember.Route.extend({
 	},
 	setupController: function(controller, model) {
 		controller.set('session', model);
+
 		controller.set('notebooks', App.Notebook.find());
 		controller.set('blogs', App.Blog.find());
 

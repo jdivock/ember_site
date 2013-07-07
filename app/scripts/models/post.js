@@ -4,23 +4,23 @@ App.Post = DS.Model.extend({
 
 	evernoteActive: DS.attr('boolean'),
 	evernoteNotebook: DS.attr('string'),
+	evernoteSession: DS.attr('boolean'),
 
 	tumblrActive: DS.attr('boolean'),
 	tumblrBlog: DS.attr('string'),
-
+	tumblrSession: DS.attr('boolean'),
+	
 	sbwcActive: DS.attr('boolean'),
 	sbwcThreadId: DS.attr('string'),
-
-	evernoteSession: DS.attr('boolean'),
-	tumblrSession: DS.attr('boolean'),
 	sbwcSession: DS.attr('boolean'),
 
 	saved: DS.attr('boolean'),
 
 	didUpdate: function() {
-		jQuery.pnotify({
+		$.pnotify({
 			title: 'Success!',
-			text: 'Post Successfully Created.'
+			text: 'Post Successfully Created.',
+			type: 'success'
 		});
 		this.set('title', '');
 		this.set('post', '');

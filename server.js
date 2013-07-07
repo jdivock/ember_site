@@ -14,9 +14,9 @@ var allowCrossDomain = function(req, res, next) {
 var app = express.createServer();
 app.use(express.logger());
 app.use(express.bodyParser());
-app.use(express.cookieParser());
+app.use(express.cookieParser(process.env.COOKIE_SECRET));
 app.use(express.session({
-	secret: "asdklfjasdf"
+	secret: process.env.SESSION_SECRET
 }));
 app.use(express.methodOverride());
 app.use(allowCrossDomain);
@@ -45,6 +45,8 @@ app.get('/multipost/notebooks', routes.require_evernote_login, routes.getNoteboo
 app.post('/multipost/sbwc', routes.sbwcLogin);
 app.get('/multipost/sbwcPost', routes.sbwcPost);
 app.get('/multipost/sbwc', routes.sbwcLogin);
+
+app.get('/clear', routes.clearAll);
 
 var port = process.env.PORT || 3000;
 console.log("listening on http://localhost:" + port);
