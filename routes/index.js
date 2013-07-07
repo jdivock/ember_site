@@ -33,6 +33,7 @@ exports.getNotebooks = function(req, res) {
 		token: req.cookies.evernote_oauth_access_token,
 		sandbox: true
 	});
+
 	var note_store = client.getNoteStore();
 	note_store.listNotebooks(req.cookies.evernote_oauth_access_token, function(notebooks) {
 		console.log("NOTEBOOKS");
@@ -47,7 +48,7 @@ exports.getNotebooks = function(req, res) {
 exports.require_tumblr_login = function(req, res, next) {
 	if (!req.cookies.tumblr_oauth_access_token) {
 		//res.redirect("/multipost/tumblr_login?action=" + querystring.escape(req.originalUrl));
-		res.send();
+		res.send(JSON.stringify({"blogs":null}));
 		return;
 	}
 	next();
@@ -71,7 +72,7 @@ exports.getBlogs = function(req, res) {
 exports.require_evernote_login = function(req, res, next) {
 	if (!req.cookies.evernote_oauth_access_token) {
 		//res.redirect("/multipost/evernote_login?action=" + querystring.escape(req.originalUrl));
-		res.send();
+		res.send(JSON.stringify({"notebooks":null}));
 		return;
 	}
 	next();
